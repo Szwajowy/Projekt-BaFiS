@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MySymfonyApp - Filmy{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Filmy</h1>
+        <div class="btn-group mb-3" role="group">
+            <a href="/movies/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            <a href="#" class="btn btn-primary btn-md disabled"/>Filtruj</a>
+        </div>
+    </div>
+    {% if movies %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+                <tr>
+                    <th scope="row">{{ movie.title }}</th>
+                    <td>{{ movie.genre }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            <a href="/movies/edit/{{ movie.id }}" class="btn btn-primary btn-sm mr-1 disabled"/>Edytuj</a>
+                            <a href="/movies/delete/{{ movie.id }}" class="btn btn-danger btn-sm disabled"/>Usuń</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Powinny tutaj być filmy.. hmm..</strong><br/>
+        Próbowałeś może <a href="/movies" class="alert-link">włączyć i wyłączyć</a>?
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

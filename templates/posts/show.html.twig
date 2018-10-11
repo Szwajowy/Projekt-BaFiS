@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MySymfonyApp - Posts{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if post %}
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.content }}</p>
+            <hr>
+            <a href="/">Powrót</a>
+        {% else %}
+        <h1>Post nieistnieje</h1>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Nie tego tutaj szukasz.. *przesuwa otwartą dłoń przed twoją twarzą*</strong></br>
+            <a href="/" class="alert-link">Wróć na stronę główną</a> i spróbuj jeszcze raz.
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

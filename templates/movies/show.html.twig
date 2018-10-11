@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MySymfonyApp - {{ movie.title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if movie %}
+            <h1>{{ movie.title }}</h1>
+            <h4>Gatunek: {{ movie.genre }}</h4>
+            {% if movie.description %}
+                <p>{{ movie.description }}</p>
+            {% endif %}
+            <hr>
+            <a href="/movies">Powrót</a>
+        {% else %}
+        <h1>Serial nieistnieje</h1>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Nie tego tutaj szukasz.. *przesuwa otwartą dłoń przed twoją twarzą*</strong></br>
+            <a href="/movies" class="alert-link">Wróć do przeglądania seriali</a> i spróbuj jeszcze raz.
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

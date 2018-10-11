@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MySymfonyApp Posts{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Posty</h1>
+        <div class="btn-group mb-3" role="group">
+            <a href="/posts/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+        </div>
+    </div>
+    {% if posts %}
+        {% for post in posts %}
+        <div class="mb-5">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.content|length > 300 ? post.content|slice(0, 300) ~ '...' : post.content }}</p>
+            <div class="btn-group" role="group">
+                <a href="/posts/show/{{ post.id }}" class="btn btn-primary btn-sm"/>Szczegóły</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Powinny tutaj być posty.. hmm..</strong><br/>
+        Próbowałeś może <a href="/posts" class="alert-link">włączyć i wyłączyć</a>?
+    </div>
+    {% endif %}
+{% endblock %}
