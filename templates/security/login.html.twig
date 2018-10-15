@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logowanie{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mb-3">Logowanie</h1>
+
+    {% if error %}
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oh snap!</strong><br/>
+        {{ error.messageKey }}
+    </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.username, {'full_name': '_username'}) }}
+    {{ form_row(form.password, {'full_name': '_password'}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+{% endblock %}

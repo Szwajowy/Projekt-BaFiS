@@ -24,7 +24,7 @@
          */
 
         public function index() {
-            $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
+            $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array(), array('createdAt' => 'DESC'));
 
             return $this->render('posts/index.html.twig', array('posts' => $posts));
         }
@@ -64,6 +64,9 @@
             if($form->isSubmitted() && $form->isValid()) {
                 $post = $form->getData();
 
+                $actualTime = new \DateTime();
+                $post->setCreatedAt($actualTime);
+
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($post);
                 $entityManager->flush();
@@ -72,5 +75,56 @@
             }
                 
             return $this->render('/posts/add.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/posts/edit/{id}", name="post_edit")
+         * Method({"GET", "POST"})
+         */
+        public function edit(Request $request, $id) {
+            $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+            
+            $form = $this->createFormBuilder($post)
+                ->add('title', TextType::class, array(
+                    'attr' => array('class' => 'form-control')
+                    ))
+                ->add('content', TextareaType::class, array(
+                    'attr' => array('class' => 'form-control')
+                ))
+                ->add('save', SubmitType::class, array(
+                    'label' => 'Edytuj',
+                    'attr' => array('class' => 'btn btn-primary mt-3')
+                ))
+                ->getForm();
+
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()) {
+                $post = $form->getData();
+
+                $actualTime = new \DateTime();
+                $post->setEditedAt($actualTime);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($post);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('post_list');
+            }
+                
+            return $this->render('/posts/edit.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/posts/delete/{id}", name="post_delete")
+         */
+        public function delete($id) {
+            $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($post);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('post_list');
         }
     }

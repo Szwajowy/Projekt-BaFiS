@@ -26,6 +26,16 @@ class Post
      */
     private $content;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $editedAt;
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -44,5 +54,21 @@ class Post
 
     public function setContent($content) {
         $this->content = $content;
+    }
+
+    public function getCreatedAt() {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt) {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getEditedAt() {
+        return $this->editedAt;
+    }
+
+    public function setEditedAt($editedAt) {
+        $this->editedAt = $editedAt;
     }
 }

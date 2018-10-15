@@ -23,7 +23,7 @@
          * @Method({"GET"})
          */
         public function index() {
-            $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
+            $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array(), array('title' => 'ASC'));
 
             return $this->render('movies/index.html.twig', array('movies' => $movies));
         }
@@ -74,5 +74,57 @@
             }
                 
             return $this->render('/movies/add.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/movies/edit/{id}", name="movie_edit")
+         * Method({"GET", "POST"})
+         */
+        public function edit(Request $request, $id) {
+            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+            
+            $form = $this->createFormBuilder($movie)
+                ->add('title', TextType::class, array(
+                    'attr' => array('class' => 'form-control')
+                    ))
+                ->add('genre', TextType::class, array(
+                    'attr' => array('class' => 'form-control')
+                ))
+                ->add('description', TextareaType::class, array(
+                    'required' => false,
+                    'attr' => array('class' => 'form-control')
+                ))
+                ->add('save', SubmitType::class, array(
+                    'label' => 'Edytuj',
+                    'attr' => array('class' => 'btn btn-primary mt-3')
+                ))
+                ->getForm();
+
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()) {
+                $movie = $form->getData();
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($movie);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('movie_list');
+            }
+                
+            return $this->render('/movies/edit.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/movies/delete/{id}", name="movie_delete")
+         */
+        public function delete($id) {
+            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($movie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('movie_list');
         }
     }

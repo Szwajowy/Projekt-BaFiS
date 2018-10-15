@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MySymfonyApp - Seriale{% endblock %}
+{% block title %}Seriale{% endblock %}
 
 {% block body %}
 <div class="container">
     <div class="d-flex flex-row justify-content-between">
         <h1>Seriale</h1>
         <div class="btn-group mb-3" role="group">
+            {% if is_granted('ROLE_USER') %}
             <a href="/series/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            {% endif %}
             <a href="#" class="btn btn-primary btn-md disabled"/>Filtruj</a>
         </div>
     </div>
@@ -28,8 +30,10 @@
                     <td>
                         <div class="btn-group" role="group">
                             <a href="/series/show/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
-                            <a href="/series/edit/{{ serie.id }}" class="btn btn-primary btn-sm mr-1 disabled"/>Edytuj</a>
-                            <a href="/series/delete/{{ serie.id }}" class="btn btn-danger btn-sm disabled"/>Usuń</a>
+                            {% if is_granted('ROLE_USER') %}
+                            <a href="/series/edit/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/series/delete/{{ serie.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
@@ -41,6 +45,6 @@
         <strong>Powinny tutaj być seriale.. hmm..</strong><br/>
         Próbowałeś może <a href="/series" class="alert-link">włączyć i wyłączyć</a>?
     </div>
-    {% endif %}
-</div>    
+    {% endif %}      
+</div>
 {% endblock %}

@@ -18,6 +18,17 @@
                     <a class="nav-link" href="/series">Seriale</a>
                 </li>
             </ul>
+            <ul class="navbar-nav">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Wyloguj</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Zaloguj</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

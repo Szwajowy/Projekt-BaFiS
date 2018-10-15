@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MySymfonyApp Posts{% endblock %}
+{% block title %}Posty{% endblock %}
 
 {% block body %}
 <div class="container">
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-between mb-3">
         <h1>Posty</h1>
-        <div class="btn-group mb-3" role="group">
+        <div class="btn-group" role="group">
+            {% if is_granted('ROLE_USER') %}
             <a href="/posts/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            {% endif %}
         </div>
     </div>
     {% if posts %}
@@ -16,7 +18,11 @@
             <h1>{{ post.title }}</h1>
             <p>{{ post.content|length > 300 ? post.content|slice(0, 300) ~ '...' : post.content }}</p>
             <div class="btn-group" role="group">
-                <a href="/posts/show/{{ post.id }}" class="btn btn-primary btn-sm"/>Szczegóły</a>
+                <a href="/posts/show/{{ post.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                {% if is_granted('ROLE_USER') %}   
+                <a href="/posts/edit/{{ post.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                <a href="/posts/delete/{{ post.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -25,5 +31,6 @@
         <strong>Powinny tutaj być posty.. hmm..</strong><br/>
         Próbowałeś może <a href="/posts" class="alert-link">włączyć i wyłączyć</a>?
     </div>
-    {% endif %}
+    {% endif %}       
+</div>
 {% endblock %}

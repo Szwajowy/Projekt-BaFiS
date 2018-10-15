@@ -23,7 +23,7 @@
          * @Method({"GET"})
          */
         public function index() {
-            $series = $this->getDoctrine()->getRepository(Serie::class)->findAll();
+            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array(), array('title' => 'ASC'));
 
             return $this->render('series/index.html.twig', array('series' => $series));
         }
@@ -74,5 +74,54 @@
             }
                 
             return $this->render('/series/add.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/series/edit/{id}", name="serie_edit")
+         * Method({"GET", "POST"})
+         */
+        public function edit(Request $request, $id) {
+            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            
+            $form = $this->createFormBuilder($serie)
+                ->add('title', TextType::class, array(
+                    'attr' => array('class' => 'form-control')
+                    ))
+                ->add('genre', TextType::class, array(
+                    'attr' => array('class' => 'form-control')
+                ))
+                ->add('description', TextareaType::class, array(
+                    'required' => false,
+                    'attr' => array('class' => 'form-control')
+                ))
+                ->add('save', SubmitType::class, array(
+                    'label' => 'Edytuj',
+                    'attr' => array('class' => 'btn btn-primary mt-3')
+                ))
+                ->getForm();
+
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
+
+                return $this->redirectToRoute('serie_list');
+            }
+                
+            return $this->render('/series/edit.html.twig', array('form' => $form->createView()));
+        }
+
+        /**
+         * @Route("/series/delete/{id}", name="serie_delete")
+         */
+        public function delete($id) {
+            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($serie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('serie_list');
         }
     }

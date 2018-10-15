@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 
 /**
- * @MappedSuperclass
+ *  @ORM\MappedSuperclass()
  */
 abstract class Creation
 {
