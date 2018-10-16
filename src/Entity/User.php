@@ -41,11 +41,6 @@ class User implements UserInterface, \Serializable {
      */
     private $password;
 
-    public function __construct()
-    {
-        $this->roles = array('ROLE_USER');
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -98,7 +93,9 @@ class User implements UserInterface, \Serializable {
     }
 
     public function getRoles() {
-        return $this->roles;
+        return [
+            'ROLE_USER'
+        ];
     }
 
     public function getSalt() {
