@@ -10,6 +10,6 @@ Co powinien zawierać nasz projekt:
 6. Wyświetlanie statystyk użytkownika (ulubiony gatunek, ulubiony reżyser, średnia ocena, ilość obejrzanych produkcji) na jego osobistej stronie profilowej,
 7. system rekomendowania będzie wyliczał ilość punktów produkcji dla konkretnego użytkownika na podstawie jego preferencji takich jak: ulubiony gatunki, reżyser, scenariusz, obsada, produkcja, a także na podstawie średniej oceny danej produkcji. Parametry takie jak np. Średnia ocena będą miały większą wagę, a co za tym idzie konkretne produkcje będą wyświetlane wyżej w naszym systemie rekomendacji,
 8. System administracji aplikacją:
-⋅⋅⋅* Dodawanie, edytowanie, usuwanie produkcji,
-⋅⋅⋅* Dodawanie, edytowanie, usuwanie użytkowników,
-⋅⋅⋅* Wyświetlanie statystyk związanych z użytkowaniem serwisu
+   * Dodawanie, edytowanie, usuwanie produkcji,
+   * Dodawanie, edytowanie, usuwanie użytkowników,
+   * Wyświetlanie statystyk związanych z użytkowaniem serwisu
