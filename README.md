@@ -1,5 +1,5 @@
-# Projekt-BaFiS
-### Twoja baza filmów i seriali
+### Projekt-BaFiS
+#### Twoja baza filmów i seriali
 
 Co powinien zawierać nasz projekt:
 1. Baza aktualnych filmów i seriali z wyszczególnieniem: tytuł, gatunek (jako tag), reżyser, autorzy scenariusza, obsada, produkcja, czas trwania, data premiery, ilość odcinków, ilość sezonów,
