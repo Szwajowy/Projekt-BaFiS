@@ -2,7 +2,7 @@
 Projekt napisany przy użyciu frameworka [Symfony 4.1](https://symfony.com/)
 
 ### Wymagania
-* MariaDB 10.2 i wyższa (brak obsługi typu JSON w niższych wersjach)
+* MariaDB 10.2 i wyższa (brak obsługi typu JSON w niższych wersjach)([jak zaktualizować MariaDB w XAMPP](https://stackoverflow.com/questions/44027926/update-xampp-from-maria-db-10-1-to-10-2#))
 
 ### Co powinien zawierać nasz projekt:
 1. Baza aktualnych filmów i seriali z wyszczególnieniem: tytuł, gatunek (jako tag), reżyser, autorzy scenariusza, obsada, produkcja, czas trwania, data premiery, ilość odcinków, ilość sezonów,
