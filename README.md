@@ -1,7 +1,7 @@
 # Projekt-BaFiS - Twoja baza filmów i seriali
 Projekt napisany przy użyciu frameworka [Symfony 4.1](https://symfony.com/)
 
-##Wymagania
+## Wymagania
 * MariaDB 10.2 i wyższa (brak obsługi typu JSON w niższych wersjach)
 
 Co powinien zawierać nasz projekt:
