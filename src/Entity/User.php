@@ -9,8 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields="email", message="Email already taken")
- * @UniqueEntity(fields="username", message="Username already taken")
+ * @UniqueEntity(fields="email", message="Email jest już w użyciu")
+ * @UniqueEntity(fields="username", message="Nazwa użytkownika jest zajęta")
  */
 class User implements UserInterface, \Serializable {
     /**
@@ -41,6 +41,11 @@ class User implements UserInterface, \Serializable {
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +59,18 @@ class User implements UserInterface, \Serializable {
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -80,22 +97,23 @@ class User implements UserInterface, \Serializable {
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getRoles(): array
     {
-        return $this->email;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+    
+        return array_unique($roles);
     }
 
-    public function setEmail(?string $email): self
+    public function setRoles(array $roles)
     {
-        $this->email = $email;
-
-        return $this;
+        $this->roles = $roles;
     }
 
-    public function getRoles() {
-        return [
-            'ROLE_USER'
-        ];
+    public function resetRoles()
+    {
+        $this->roles = [];
     }
 
     public function getSalt() {
@@ -111,7 +129,8 @@ class User implements UserInterface, \Serializable {
             $this->id,
             $this->username,
             $this->password,
-            $this->email
+            $this->email,
+            $this->roles
         ]);
     }
 
@@ -120,7 +139,8 @@ class User implements UserInterface, \Serializable {
             $this->id,
             $this->username,
             $this->password,
-            $this->email
+            $this->email,
+            $this->roles
         ) = unserialize($string, ['allowed_classes' => false]);
     }
 }

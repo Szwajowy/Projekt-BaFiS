@@ -20,9 +20,15 @@
             </ul>
             <ul class="navbar-nav">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Wyloguj</a>
-                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ app.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="#">Profil</a>
+                      <a class="dropdown-item" href="/logout">Wyloguj</a>
+                    </div>
+                  </li>
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Zaloguj</a>
