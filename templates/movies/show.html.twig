@@ -4,6 +4,11 @@
 
 {% block body %}
     <div class="container">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+            <li class="breadcrumb-item"><a href="#">Filmy</a></li>
+            <li class="breadcrumb-item active"><a href="#">{{ movie.title }}</a></li>
+        </ol>
         {% if movie %}
             <h1>{{ movie.title }}</h1>
             <h4>Gatunek: {{ movie.genre }}</h4>

@@ -4,6 +4,11 @@
 
 {% block body %}
     <div class="container">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+            <li class="breadcrumb-item"><a href="#">Posty</a></li>
+            <li class="breadcrumb-item active"><a href="#">{{ post.title }}</a></li>
+        </ol>
         {% if post %}
             <h1>{{ post.title }}</h1>
             <p>{{ post.content }}</p>

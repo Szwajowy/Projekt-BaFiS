@@ -4,6 +4,10 @@
 
 {% block body %}
 <div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item active"><a href="#">Filmy</a></li>
+    </ol>
     <div class="d-flex flex-row justify-content-between">
         <h1>Filmy</h1>
         <div class="btn-group mb-3" role="group">
@@ -32,7 +36,8 @@
                             <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
                             {% if is_granted('ROLE_USER') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
-                            {% elseif is_granted('ROLE_ADMIN') %}
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
                             <a href="/movies/edit/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
                             <a href="/movies/delete/{{ movie.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>

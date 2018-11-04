@@ -4,6 +4,11 @@
 
 {% block body %}
     <div class="container">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+            <li class="breadcrumb-item"><a href="#">Seriale</a></li>
+            <li class="breadcrumb-item active"><a href="#">{{ serie.title }}</a></li>
+        </ol>
         {% if serie %}
             <h1>{{ serie.title }}</h1>
             <h4>Gatunek: {{ serie.genre }}</h4>
