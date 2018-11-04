@@ -25,8 +25,11 @@
                         {{ app.user.username }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="/profile">Profil</a>
-                      <a class="dropdown-item" href="/logout">Wyloguj</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <a class="dropdown-item" href="/pendingCreations">Lista oczekujących</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="/profile">Profil</a>
+                        <a class="dropdown-item" href="/logout">Wyloguj</a>
                     </div>
                   </li>
                 {% else %}

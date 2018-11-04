@@ -23,7 +23,7 @@
          * @Method({"GET"})
          */
         public function index() {
-            $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array(), array('title' => 'ASC'));
+            $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array('isApproved' => true), array('title' => 'ASC'));
 
             return $this->render('movies/index.html.twig', array('movies' => $movies));
         }
@@ -65,6 +65,12 @@
 
             if($form->isSubmitted() && $form->isValid()) {
                 $movie = $form->getData();
+
+                if($this->isGranted('ROLE_ADMIN')) {
+                    $movie->setIsApproved(true);
+                } else {
+                    $movie->setIsApproved(false);
+                }
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($movie);
@@ -109,7 +115,7 @@
                 $entityManager->persist($movie);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('movie_list');
+                return $this->redirect($request->server->get('HTTP_REFERER'));
             }
                 
             return $this->render('/movies/edit.html.twig', array('form' => $form->createView()));
@@ -118,13 +124,27 @@
         /**
          * @Route("/movies/delete/{id}", name="movie_delete")
          */
-        public function delete($id) {
+        public function delete(Request $request, $id) {
             $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($movie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('movie_list');
+            return $this->redirect($request->server->get('HTTP_REFERER'));
+        }
+
+        /**
+         * @Route("/movies/accept/{id}", name="movie_accept")
+         */
+        public function accept(Request $request, $id) {
+            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+            $movie->setIsApproved(true);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($movie);
+            $entityManager->flush();
+
+            return $this->redirect($request->server->get('HTTP_REFERER'));
         }
     }

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Oczekujące zgłoszenia{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item active"><a href="#">Filmy</a></li>
+    </ol>
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Oczekujące zgłoszenia</h1>
+        <div class="btn-group mb-3" role="group">
+            <a href="#" class="btn btn-primary btn-md disabled"/>Filtruj</a>
+        </div>
+    </div>
+    {% if movies %}
+    <h2>Filmy</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+                <tr>
+                    <th scope="row">{{ movie.title }}</th>
+                    <td>{{ movie.genre }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            <a href="/movies/accept/{{ movie.id }}" class="btn btn-success btn-sm mr-1" onclick="return confirm('Jesteś pewien?')"/>Zatwierdź</a>
+                            <a href="/movies/delete/{{ movie.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Jesteś pewien?')"/>Odrzuć</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if series %}
+    <h2>Seriale</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for serie in series %}
+                <tr>
+                    <th scope="row">{{ serie.title }}</th>
+                    <td>{{ serie.genre }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/series/show/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            <a href="/series/accept/{{ serie.id }}" class="btn btn-success btn-sm mr-1" onclick="return confirm('Jesteś pewien?')"/>Zatwierdź</a>
+                            <a href="/series/delete/{{ serie.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Jesteś pewien?')"/>Odrzuć</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %} 
+</div>
+{% endblock %}

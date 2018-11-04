@@ -32,6 +32,11 @@ abstract class Creation
      */
     private $genre;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isApproved;
+
     // Get and Set
     public function getId(): ?int {
         return $this->id;
@@ -61,6 +66,15 @@ abstract class Creation
 
     public function setGenre(?string $genre): self {
         $this->genre = $genre;
+        return $this;
+    }
+
+    public function getIsApproved() {
+        return $this->isApproved;
+    }
+
+    public function setIsApproved( $isApproved): self {
+        $this->isApproved = $isApproved;
         return $this;
     }
 }

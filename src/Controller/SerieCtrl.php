@@ -23,7 +23,7 @@
          * @Method({"GET"})
          */
         public function index() {
-            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array(), array('title' => 'ASC'));
+            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array('isApproved' => true), array('title' => 'ASC'));
 
             return $this->render('series/index.html.twig', array('series' => $series));
         }
@@ -66,6 +66,12 @@
             if($form->isSubmitted() && $form->isValid()) {
                 $serie = $form->getData();
 
+                if($this->isGranted('ROLE_ADMIN')) {
+                    $serie->setIsApproved(true);
+                } else {
+                    $serie->setIsApproved(false);
+                }
+
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($serie);
                 $entityManager->flush();
@@ -106,7 +112,7 @@
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->flush();
 
-                return $this->redirectToRoute('serie_list');
+                return $this->redirect($request->server->get('HTTP_REFERER'));
             }
                 
             return $this->render('/series/edit.html.twig', array('form' => $form->createView()));
@@ -115,13 +121,27 @@
         /**
          * @Route("/series/delete/{id}", name="serie_delete")
          */
-        public function delete($id) {
+        public function delete(Request $request, $id) {
             $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($serie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('serie_list');
+            return $this->redirect($request->server->get('HTTP_REFERER'));
+        }
+
+        /**
+         * @Route("/series/accept/{id}", name="serie_accept")
+         */
+        public function accept(Request $request, $id) {
+            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie->setIsApproved(true);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($serie);
+            $entityManager->flush();
+
+            return $this->redirect($request->server->get('HTTP_REFERER'));
         }
     }
