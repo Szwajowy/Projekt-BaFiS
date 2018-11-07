@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Twój profil</h1>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ app.user.username }}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">
+                {% if is_granted('ROLE_ADMIN') %}
+                    Administrator
+                {% elseif is_granted('ROLE_USER') %}
+                    Użytkownik
+                {% endif %}
+            </h6>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis metus vel turpis finibus tempus. Etiam tortor mauris, luctus id efficitur ac, tincidunt eget felis. Nullam imperdiet sed mi elementum consequat. Nunc molestie sit amet nunc commodo consectetur. Ut lacinia in eros placerat vehicula. Duis efficitur ut augue sed fermentum. Fusce malesuada, quam gravida rutrum laoreet, ex mi eleifend ligula, condimentum commodo nisi lectus sit amet risus. </p>
+            E-mail: <a href="mailto: {{ app.user.email }}" class="card-link">{{ app.user.email }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

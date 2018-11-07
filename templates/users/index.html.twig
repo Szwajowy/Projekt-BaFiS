@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Użytkownicy{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item active"><a href="#">Użytkownicy</a></li>
+    </ol>
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Użytkownicy</h1>
+        <div class="btn-group mb-3" role="group">
+            <a href="/users/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            <a href="#" class="btn btn-primary btn-md disabled"/>Filtruj</a>
+        </div>
+    </div>
+    {% if users %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nazwa użytkownika</th>
+                <th scope="col">E-Mail</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user.username }}</th>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/users/show/{{ user.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            <a href="/users/grant/{{ user.id }}" class="btn btn-success btn-sm mr-1 disabled"/>Nadaj rolę</a>
+                            <a href="/users/delete/{{ user.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

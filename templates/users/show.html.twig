@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+            <li class="breadcrumb-item"><a href="#">Użytkownicy</a></li>
+            <li class="breadcrumb-item active"><a href="#">{{ user.username }}</a></li>
+        </ol>
+        {% if user %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4 class="card-title">{{ user.username }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {# Sprawdzenie ról użytkownika i wyświetlenie nazwy roli o najwyższej ważności #}
+                    {% set role_name = 'Użytkownik' %}
+                    {% for role in user.getRoles() %}
+                        {% if role == 'ROLE_ADMIN' %}
+                            {% set role_name = 'Administrator' %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ role_name }}
+                </h6>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis metus vel turpis finibus tempus. Etiam tortor mauris, luctus id efficitur ac, tincidunt eget felis. Nullam imperdiet sed mi elementum consequat. Nunc molestie sit amet nunc commodo consectetur. Ut lacinia in eros placerat vehicula. Duis efficitur ut augue sed fermentum. Fusce malesuada, quam gravida rutrum laoreet, ex mi eleifend ligula, condimentum commodo nisi lectus sit amet risus. </p>
+                E-mail: <a href="mailto: {{ app.user.email }}" class="card-link">{{ app.user.email }}</a>
+            </div>
+        </div>
+        <a href="/users">Powrót</a>
+        {% else %}
+        <h1>Serial nieistnieje</h1>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Nie tego tutaj szukasz.. *przesuwa otwartą dłoń przed twoją twarzą*</strong></br>
+            <a href="/movies" class="alert-link">Wróć do przeglądania seriali</a> i spróbuj jeszcze raz.
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
