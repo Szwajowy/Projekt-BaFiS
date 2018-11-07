@@ -17,20 +17,34 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 use App\Entity\User;
 
-class SecurityCtrl extends AbstractController
+class UsersCtrl extends AbstractController
 {
-    private $encoder;
+    /**
+     * @Route("/users", name="user_list")
+     */
+    public function index()
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findBy(array(), array('username' => 'ASC'));
 
-    public function __construct(UserPasswordEncoderInterface $encoder) {
-        $this->encoder = $encoder;
+        return $this->render('users/index.html.twig', array('users' => $users));
     }
 
     /**
-     * @Route("/register", name="register")
+     * @Route("/users/show/{id}", name="user_show")
      */
-    public function register(Request $request, AuthenticationUtils $utils) {
+    public function show($id) {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        return $this->render('users/show.html.twig', array('user' => $user));
+    } 
+
+    /**
+     * @Route("/users/add", name="user_add")
+     * Method({"GET", "POST"})
+     */
+    public function add(Request $request) {
         $user = new User();
-            
+        
         $form = $this->createFormBuilder($user)
             ->add('username', TextType::class, array(
                 'label' => 'Login',
@@ -49,7 +63,7 @@ class SecurityCtrl extends AbstractController
                     'attr' => array('class' => 'form-control')),
             ))
             ->add('register', SubmitType::class, array(
-                'label' => 'Zarejestruj',
+                'label' => 'Dodaj',
                 'attr' => array('class' => 'btn btn-primary mt-3')
             ))
             ->getForm();
@@ -67,55 +81,22 @@ class SecurityCtrl extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('user_list');
         }
-
-        $error = $utils->getLastAuthenticationError();
-
-        return $this->render('security/register.html.twig', [
-            'form' => $form->createView(),
-            'error' => $error
-        ]);
-    }
-
-    /**
-     * @Route("/login", name="login")
-     * Method({"GET", "POST"})
-     */
-    public function login(Request $request, AuthenticationUtils $utils) {
-        $user = new User();
             
-        $form = $this->createFormBuilder($user)
-            ->add('username', TextType::class, array(
-                'attr' => array('class' => 'form-control')
-                ))
-            ->add('password', PasswordType::class, array(
-                'attr' => array('class' => 'form-control')
-            ))
-            ->add('login', SubmitType::class, array(
-                'label' => 'Zaloguj',
-                'attr' => array('class' => 'btn btn-primary mt-3')
-            ))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute('post_list');
-        }
-
-        $error = $utils->getLastAuthenticationError();
-
-        return $this->render('security/login.html.twig', [
-            'form' => $form->createView(),
-            'error' => $error
-        ]);
+        return $this->render('/users/add.html.twig', array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/users/delete/{id}", name="user_delete")
      */
-    public function logout() {
+    public function delete(Request $request, $id) {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirect($request->server->get('HTTP_REFERER'));
     }
 }

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nowy użytkownik{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item"><a href="#">użytkownicy</a></li>
+        <li class="breadcrumb-item active"><a href="#">Tworzenie</a></li>
+    </ol>
+    <h1 class="mb-3">Nowy użytkownik</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+{% endblock %}

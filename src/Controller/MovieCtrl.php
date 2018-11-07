@@ -35,7 +35,7 @@
             $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
 
             return $this->render('movies/show.html.twig', array('movie' => $movie));
-        }
+        } 
 
         /**
          * @Route("/movies/add", name="movie_add")
