@@ -9,12 +9,14 @@
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+    use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
 
     use Symfony\Component\Routing\Annotation\Route;
 
     use App\Entity\Movie;
+    use App\Entity\Rating;
 
     class MovieCtrl extends Controller {
 
@@ -146,5 +148,70 @@
             $entityManager->flush();
 
             return $this->redirect($request->server->get('HTTP_REFERER'));
+        }
+
+        /**
+         * @Route("/api/movie/getRating", name="movie_get_rating")
+         */
+        public function getRating(Request $request) {
+            // if (!$request->getContent()) {
+            //     $response = new JsonResponse(array('message' => "Request content is empty!"));
+            //     return $response;
+            // }
+
+            // if ($request->getContentType() != 'json' || !$request->getContent()) {
+            //     $response = new JsonResponse(array('message' => "Bad content-type!"));
+            //     return $response;
+            // }
+
+            $data = json_decode($request->getContent(), true);
+
+            $rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('movieID' => intval($data['movieID']), 'createdBy' => intval($data['userID'])), array());
+            if($rating != null) {
+                $rating = $rating[0];
+                $response = new JsonResponse(array('message' => "Successfull!", 'data' => $rating->getValue()));
+            } else {
+                $response = new JsonResponse(array('message' => "There is no rating on this movie from this user !"));
+            }
+
+            return $response;
+        }
+
+        /**
+         * @Route("/api/movie/changeRating", name="movie_change_rating")
+         */
+        public function changeRating(Request $request) {
+            if (!$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Request content is empty!"));
+                return $response;
+            }
+
+            if ($request->getContentType() != 'json' || !$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Bad content-type!"));
+                return $response;
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            $rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('movieID' => intval($data['movieID']), 'createdBy' => intval($data['userID'])), array());
+
+            if($rating == null){
+                $rating = new Rating();
+                $rating->setValue(intval($data['ratingValue']));
+                $rating->setMovieID(intval($data['movieID']));
+                $rating->setCreatedBy(intval($data['userID']));
+                $rating->setCreatedAt(new \DateTime());
+            } else {
+                $rating = $rating[0];
+                $rating->setValue(intval($data['ratingValue']));
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($rating);
+            $entityManager->flush();
+
+            $response = new JsonResponse(array('message' => "Successfull!"));
+
+            return $response;
         }
     }

@@ -16,7 +16,34 @@
                 <p>{{ movie.description }}</p>
             {% endif %}
             <hr>
-            <a href="/movies">Powrót</a>
+            <div class="d-flex flex-row justify-content-between">
+                <a href="/movies">Powrót</a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <form name="ratingForm" class="form-group d-flex flex-row justify-content-between">
+                    <p class="mr-2">Ocena:</p>
+                    <div class="custom-control custom-radio mr-2">
+                        <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="customRadio1">1</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-2">
+                        <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" value="2">
+                        <label class="custom-control-label" for="customRadio2">2</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-2">
+                        <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input" value="3">
+                        <label class="custom-control-label" for="customRadio3">3</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-2">
+                        <input type="radio" id="customRadio4" name="customRadio" class="custom-control-input" value="4">
+                        <label class="custom-control-label" for="customRadio4">4</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio5" name="customRadio" class="custom-control-input" value="5">
+                        <label class="custom-control-label" for="customRadio5">5</label>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
         {% else %}
         <h1>Serial nieistnieje</h1>
         <div class="alert alert-dismissible alert-danger">
@@ -26,4 +53,52 @@
         </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <script>
+        var radios = document.ratingForm.customRadio;
+
+        const getRatingUrl = 'http://projektbafis.test/api/movie/getRating';
+        const changeRatingUrl = 'http://projektbafis.test/api/movie/changeRating';
+
+        const data = {
+            ratingValue:null,
+            movieID:{{ movie.id }},
+            userID:{{ app.user.id }}
+        }
+
+        const params = {
+            headers:{
+                "Content-type": "application/json"
+            },
+            body:JSON.stringify(data),
+            method:"POST"
+        }
+
+        fetch(getRatingUrl, params)
+                .then(resp=>resp.json())
+                .then(resp=> {
+                    if(resp.data != null) {
+                        radios[resp.data-1].checked = true;
+                    }
+                })
+                .catch(error=>console.log(error))
+        
+        radios.forEach((radio) => {
+            radio.addEventListener('change', function() {
+                data.ratingValue = radio.value;
+                params.body = JSON.stringify(data);
+
+                fetch(changeRatingUrl, params)
+                .then(resp=>resp.json())
+                .then(resp=> {
+                    console.log(resp);
+                })
+                .catch(error=>console.log(error))
+            })
+        })
+    </script>
+    {% endif %}
 {% endblock %}
