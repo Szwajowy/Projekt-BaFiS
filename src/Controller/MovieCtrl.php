@@ -34,8 +34,8 @@
                     'attr' => array('class' => 'form-control mr-1')
                     ))
                 ->add('save', SubmitType::class, array(
-                    'label' => 'Filtruj',
-                    'attr' => array('class' => 'btn btn-primary mt-3 mr-1')
+                    'label' => 'Wyszukaj',
+                    'attr' => array('class' => 'btn btn-primary mr-1')
                 ))
                 ->getForm();
             
@@ -178,18 +178,18 @@
         }
 
         /**
-         * @Route("/api/movie/getRating", name="movie_get_rating")
+         * @Route("/api/movies/getRating", name="movie_get_rating")
          */
         public function getRating(Request $request) {
-            // if (!$request->getContent()) {
-            //     $response = new JsonResponse(array('message' => "Request content is empty!"));
-            //     return $response;
-            // }
+            if (!$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Request content is empty!"));
+                return $response;
+            }
 
-            // if ($request->getContentType() != 'json' || !$request->getContent()) {
-            //     $response = new JsonResponse(array('message' => "Bad content-type!"));
-            //     return $response;
-            // }
+            if ($request->getContentType() != 'json' || !$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Bad content-type!"));
+                return $response;
+            }
 
             $data = json_decode($request->getContent(), true);
 
@@ -205,7 +205,7 @@
         }
 
         /**
-         * @Route("/api/movie/changeRating", name="movie_change_rating")
+         * @Route("/api/movies/changeRating", name="movie_change_rating")
          */
         public function changeRating(Request $request) {
             if (!$request->getContent()) {

@@ -11,12 +11,13 @@
     <div class="d-flex flex-row justify-content-between">
         <h1>Seriale</h1>
         <div class="btn-group mb-3" role="group">
+            {{ form_start(filter, { 'attr': {'class': 'd-flex flex-row justify-content-between'} }) }}
+            {{ form_widget(filter.title) }}
+            {{ form_widget(filter.save) }}
+            {{ form_end(filter) }}
             {% if is_granted('ROLE_USER') %}
             <a href="/series/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
             {% endif %}
-            {{ form_start(filter) }}
-            {{ form_widget(filter) }}
-            {{ form_end(filter) }}
         </div>
     </div>
     {% if series %}

@@ -9,12 +9,14 @@
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+    use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
 
     use Symfony\Component\Routing\Annotation\Route;
 
     use App\Entity\Serie;
+    use App\Entity\Rating;
 
     class SerieCtrl extends Controller {
 
@@ -32,8 +34,8 @@
                     'attr' => array('class' => 'form-control mr-1')
                     ))
                 ->add('save', SubmitType::class, array(
-                    'label' => 'Filtruj',
-                    'attr' => array('class' => 'btn btn-primary mt-3 mr-1')
+                    'label' => 'Wyszukaj',
+                    'attr' => array('class' => 'btn btn-primary mr-1')
                 ))
                 ->getForm();
             
@@ -170,5 +172,70 @@
             $entityManager->flush();
 
             return $this->redirect($request->server->get('HTTP_REFERER'));
+        }
+
+        /**
+         * @Route("/api/series/getRating", name="serie_get_rating")
+         */
+        public function getRating(Request $request) {
+            if (!$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Request content is empty!"));
+                return $response;
+            }
+
+            if ($request->getContentType() != 'json' || !$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Bad content-type!"));
+                return $response;
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            $rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('serieID' => intval($data['serieID']), 'createdBy' => intval($data['userID'])), array());
+            if($rating != null) {
+                $rating = $rating[0];
+                $response = new JsonResponse(array('message' => "Successfull!", 'data' => $rating->getValue()));
+            } else {
+                $response = new JsonResponse(array('message' => "There is no rating on this serie from this user !"));
+            }
+
+            return $response;
+        }
+
+        /**
+         * @Route("/api/series/changeRating", name="serie_change_rating")
+         */
+        public function changeRating(Request $request) {
+            if (!$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Request content is empty!"));
+                return $response;
+            }
+
+            if ($request->getContentType() != 'json' || !$request->getContent()) {
+                $response = new JsonResponse(array('message' => "Bad content-type!"));
+                return $response;
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            $rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('serieID' => intval($data['serieID']), 'createdBy' => intval($data['userID'])), array());
+
+            if($rating == null){
+                $rating = new Rating();
+                $rating->setValue(intval($data['ratingValue']));
+                $rating->setSerieID(intval($data['serieID']));
+                $rating->setCreatedBy(intval($data['userID']));
+                $rating->setCreatedAt(new \DateTime());
+            } else {
+                $rating = $rating[0];
+                $rating->setValue(intval($data['ratingValue']));
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($rating);
+            $entityManager->flush();
+
+            $response = new JsonResponse(array('message' => "Successfull!"));
+
+            return $response;
         }
     }
