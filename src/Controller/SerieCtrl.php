@@ -22,10 +22,37 @@
          * @Route("/series", name="serie_list")
          * @Method({"GET"})
          */
-        public function index() {
-            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array('isApproved' => true), array('title' => 'ASC'));
+        public function index(Request $request) {
+            $serie = new Serie();
+            
+            $form = $this->createFormBuilder($serie)
+                ->add('title', TextType::class, array(
+                    'label' => 'Tytuł',
+                    'required' => false,
+                    'attr' => array('class' => 'form-control mr-1')
+                    ))
+                ->add('save', SubmitType::class, array(
+                    'label' => 'Filtruj',
+                    'attr' => array('class' => 'btn btn-primary mt-3 mr-1')
+                ))
+                ->getForm();
+            
+            $form->handleRequest($request);
 
-            return $this->render('series/index.html.twig', array('series' => $series));
+            if($form->isSubmitted() && $form->isValid()) {
+                $filter = $form->get('title')->getData();
+            } else $filter = '';
+
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(Serie::class);
+            $query = $repository->createQueryBuilder('c')
+                ->where('c.isApproved = true')
+                ->andWhere('c.title LIKE \'%'.$filter.'%\'')
+                ->orderBy('c.title', 'ASC')
+                ->getQuery();
+            $series = $query->getResult();
+
+            return $this->render('series/index.html.twig', array('series' => $series, 'filter' => $form->createView()));
         }
 
         /**

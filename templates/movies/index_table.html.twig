@@ -1,0 +1,30 @@
+<table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+                <tr>
+                    <th scope="row">{{ movie.title }}</th>
+                    <td>{{ movie.genre }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            {% if is_granted('ROLE_USER') %}
+                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
+                            <a href="/movies/edit/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/movies/delete/{{ movie.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

@@ -14,40 +14,15 @@
             {% if is_granted('ROLE_USER') %}
             <a href="/series/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
             {% endif %}
-            <a href="#" class="btn btn-primary btn-md disabled"/>Filtruj</a>
+            {{ form_start(filter) }}
+            {{ form_widget(filter) }}
+            {{ form_end(filter) }}
         </div>
     </div>
     {% if series %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Gatunek</th>
-                <th scope="col">Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for serie in series %}
-                <tr>
-                    <th scope="row">{{ serie.title }}</th>
-                    <td>{{ serie.genre }}</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a href="/series/show/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
-                            {% if is_granted('ROLE_USER') %}
-                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
-                            {% endif %}
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                            <a href="/series/edit/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
-                            <a href="/series/delete/{{ serie.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+    {{ include('/series/index_table.html.twig') }}
+
     {% else %}
     <div class="alert alert-dismissible alert-danger">
         <strong>Powinny tutaj być seriale.. hmm..</strong><br/>
