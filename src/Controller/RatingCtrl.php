@@ -19,7 +19,7 @@
         private $request;
         private $requestData;
         private $productionType;
-        private $rating;
+        private $rating = null;
 
         public function handleRequest() {
             // Check if request is there
@@ -59,10 +59,15 @@
             $this->productionType = $type;
             $this->request = $request;
 
-            $this->handleRequest();
-            $this->getRatingFromDB();
+            if($error = $this->handleRequest()) {
+                return $error;
+            }
 
-            if($this->rating != null) {
+            if($error = $this->getRatingFromDB()) {
+                return $error;
+            }
+
+            if($this->rating != null && $this->rating != '') {
                 $this->rating = $this->rating[0];
                 $response = new JsonResponse(array('message' => "Successfull!", 'data' => $this->rating->getValue()));
             } else {
@@ -73,14 +78,19 @@
         }
 
         /**
-         * @Route("/api/{type}/changeRating", name="change_rating")
+         * @Route("/api/{type}/changeRating", name="set_rating")
          */
-        public function changeRating(Request $request, $type) {
+        public function setRating(Request $request, $type) {
             $this->productionType = $type;
             $this->request = $request;
 
-            $this->handleRequest($request);
-            $this->getRatingFromDB();
+            if($error = $this->handleRequest()) {
+                return $error;
+            }
+
+            if($error = $this->getRatingFromDB()) {
+                return $error;
+            }
 
             if($this->rating == null){
                 $this->rating = new Rating();
