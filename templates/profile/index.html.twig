@@ -5,18 +5,44 @@
 {% block body %}
 <div class="container">
     <h1>Twój profil</h1>
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">{{ app.user.username }}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">
-                {% if is_granted('ROLE_ADMIN') %}
-                    Administrator
-                {% elseif is_granted('ROLE_USER') %}
-                    Użytkownik
-                {% endif %}
-            </h6>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis metus vel turpis finibus tempus. Etiam tortor mauris, luctus id efficitur ac, tincidunt eget felis. Nullam imperdiet sed mi elementum consequat. Nunc molestie sit amet nunc commodo consectetur. Ut lacinia in eros placerat vehicula. Duis efficitur ut augue sed fermentum. Fusce malesuada, quam gravida rutrum laoreet, ex mi eleifend ligula, condimentum commodo nisi lectus sit amet risus. </p>
-            E-mail: <a href="mailto: {{ app.user.email }}" class="card-link">{{ app.user.email }}</a>
+    <div class="row justify-content-between">
+        <div class="card col-7">
+            <div class="card-body">
+                <h4 class="card-title">{{ app.user.username }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        Administrator
+                    {% elseif is_granted('ROLE_USER') %}
+                        Użytkownik
+                    {% endif %}
+                </h6>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis metus vel turpis finibus tempus. Etiam tortor mauris, luctus id efficitur ac, tincidunt eget felis. Nullam imperdiet sed mi elementum consequat. Nunc molestie sit amet nunc commodo consectetur. Ut lacinia in eros placerat vehicula. Duis efficitur ut augue sed fermentum. Fusce malesuada, quam gravida rutrum laoreet, ex mi eleifend ligula, condimentum commodo nisi lectus sit amet risus. </p>
+                E-mail: <a href="mailto: {{ app.user.email }}" class="card-link">{{ app.user.email }}</a>
+            </div>
+        </div>
+        <div class="card col-4">
+            <div class="card-body">
+                <h4 class="card-title">Filmy</h4>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Ocenione
+                        <span class="badge badge-primary badge-pill">14</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Obejrzane
+                        <span class="badge badge-primary badge-pill">2</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Do obejrzenia
+                        <span class="badge badge-primary badge-pill">1</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-between mt-3">
+        <div class="col-12">
+            <h4 class="text-center">Oceny</h4>
         </div>
     </div>
 </div>
