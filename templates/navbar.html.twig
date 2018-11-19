@@ -51,12 +51,17 @@
             </ul>
         </div>
     </div>
-    {% if filter is defined %}
+    {# {% if filter is defined %} #}
     <div class="container mt-3">
-        {{ form_start(filter, { 'attr': {'class': 'form-inline w-100 mx-auto'} }) }}
+        <form action="{{ path('search') }}" method="post" name="searchForm" class="form-inline w-100 mx-auto">
+            <input type="text" id="search_input" name="searchInput" class="form-control w-75" placeholder="Czego szukasz ?" />
+            <button type="submit" id="search_submit" name="searchSubmit" class="btn btn-secondary w-25">Wyszukaj</button>
+        </form>
+
+        {# {{ form_start(filter, { 'attr': {'class': 'form-inline w-100 mx-auto'} }) }}
         {{ form_widget(filter.title, { 'attr': {'class': 'form-control w-75', 'placeholder': 'Czego szukasz ?'} }) }}
         {{ form_widget(filter.save, { 'attr': {'class': 'btn btn-secondary w-25'} }) }}
-        {{ form_end(filter) }}
+        {{ form_end(filter) }} #}
     </div>
-    {% endif %}
+    {# {% endif %} #}
 </nav>

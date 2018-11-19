@@ -25,36 +25,9 @@
          * Method({"GET", "POST"})
          */
         public function index(Request $request) {
-            $movie = new Movie();
-            
-            $form = $this->createFormBuilder($movie)
-                ->add('title', TextType::class, array(
-                    'label' => 'Tytuł',
-                    'required' => false,
-                    'attr' => array('class' => 'form-control mr-1')
-                    ))
-                ->add('save', SubmitType::class, array(
-                    'label' => 'Wyszukaj',
-                    'attr' => array('class' => 'btn btn-primary mr-1')
-                ))
-                ->getForm();
-            
-            $form->handleRequest($request);
+            $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array(), array('title' => 'ASC'));
 
-            if($form->isSubmitted() && $form->isValid()) {
-                $filter = $form->get('title')->getData();
-            } else $filter = '';
-
-            $em = $this->getDoctrine()->getManager();
-            $repository = $em->getRepository(Movie::class);
-            $query = $repository->createQueryBuilder('c')
-                ->where('c.isApproved = true')
-                ->andWhere('c.title LIKE \'%'.$filter.'%\'')
-                ->orderBy('c.title', 'ASC')
-                ->getQuery();
-            $movies = $query->getResult();
-
-            return $this->render('movies/index.html.twig', array('movies' => $movies, 'filter' => $form->createView()));
+            return $this->render('movies/index.html.twig', array('movies' => $movies));
         }
 
         /**

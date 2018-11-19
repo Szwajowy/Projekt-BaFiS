@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Wyniki wyszukiwania{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item active"><a href="#">Wyszukiwanie</a></li>
+    </ol>
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Wyniki wyszukiwania</h1>
+    </div>
+    {% if results %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <th scope="row">{{ result.title }}</th>
+                    <td>{{ result.genre }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/{{ result.type }}s/show/{{ result.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            {% if is_granted('ROLE_USER') %}
+                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
+                            <a href="/{{ result.type }}s/edit/{{ result.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/{{ result.type }}s/delete/{{ result.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
