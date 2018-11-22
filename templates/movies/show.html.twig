@@ -11,7 +11,7 @@
         </ol>
         {% if movie %}
             <h1>{{ movie.title }}</h1>
-            <h4>Gatunek: {{ movie.genre }}</h4>
+            <h4>Gatunek: {% for genre in movie.getGenresArray %}{{ genre }}{% if not loop.last %}, {% endif %}{% endfor %}</h4>
             {% if movie.description %}
                 <p>{{ movie.description }}</p>
             {% endif %}

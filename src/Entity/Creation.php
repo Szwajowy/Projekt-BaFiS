@@ -15,65 +15,93 @@ abstract class Creation
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected  $id;
 
     /**
      * @ORM\Column(type="string", length=60)
      */
-    private $title;
+    protected  $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $description;
+    protected  $description;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="array", length=30)
      */
-    private $genre;
+    protected  $genres;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isApproved;
+    protected  $isApproved;
+
+    public function __construct()
+    {
+        $this->genres = [];
+    }
 
     // Get and Set
-    public function getId(): ?int {
+    public function getId(): ?int 
+    {
         return $this->id;
     }
 
-    public function getTitle(): ?string {
+    public function getTitle(): ?string 
+    {
         return $this->title;
     }
 
-    public function setTitle(string $title): self {
+    public function setTitle(string $title): self 
+    {
         $this->title = $title;
         return $this;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string 
+    {
         return $this->description;
     }
 
-    public function setDescription(?string $description): self {
+    public function setDescription(?string $description): self 
+    {
         $this->description = $description;
         return $this;
     }
     
-    public function getGenre(): ?string {
-        return $this->genre;
+    public function getGenres(): ?string 
+    {
+        $string = '';
+        for ($i = 0; $i < count($this->genres); $i++) {
+            $string = $string.$this->genres[$i];
+            if ($i != (count($this->genres)- 1)) {
+                $string = $string.', ';
+            }
+        }
+        return $string;
     }
 
-    public function setGenre(?string $genre): self {
-        $this->genre = $genre;
+    public function getGenresArray(): ?array 
+    {
+        return $this->genres;
+    }
+
+    public function setGenres(?string $genres): self 
+    {
+        $genresArray = explode(",", $genres);
+        $this->genres = array_map('trim', $genresArray);
+        
         return $this;
     }
 
-    public function getIsApproved() {
+    public function getIsApproved() 
+    {
         return $this->isApproved;
     }
 
-    public function setIsApproved( $isApproved): self {
+    public function setIsApproved( $isApproved): self 
+    {
         $this->isApproved = $isApproved;
         return $this;
     }

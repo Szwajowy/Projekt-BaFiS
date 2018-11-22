@@ -10,7 +10,7 @@
             {% for movie in movies %}
                 <tr>
                     <th scope="row">{{ movie.title }}</th>
-                    <td>{{ movie.genre }}</td>
+                    <td>{% for genre in movie.getGenresArray %}{{ genre }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
                     <td>
                         <div class="btn-group" role="group">
                             <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>

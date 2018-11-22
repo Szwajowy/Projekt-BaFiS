@@ -5,10 +5,6 @@
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-    use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-    use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
-
     use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +13,8 @@
 
     use App\Entity\Serie;
     use App\Entity\Rating;
+
+    use App\Form\Type\SerieType;
 
     class SerieCtrl extends Controller {
 
@@ -46,22 +44,7 @@
         public function add(Request $request) {
             $serie = new Serie();
             
-            $form = $this->createFormBuilder($serie)
-                ->add('title', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                    ))
-                ->add('genre', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('description', TextareaType::class, array(
-                    'required' => false,
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('save', SubmitType::class, array(
-                    'label' => 'Utwórz',
-                    'attr' => array('class' => 'btn btn-primary mt-3')
-                ))
-                ->getForm();
+            $form = $this->createForm(SerieType::class, $serie);
 
             $form->handleRequest($request);
 
@@ -91,22 +74,7 @@
         public function edit(Request $request, $id) {
             $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
             
-            $form = $this->createFormBuilder($serie)
-                ->add('title', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                    ))
-                ->add('genre', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('description', TextareaType::class, array(
-                    'required' => false,
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('save', SubmitType::class, array(
-                    'label' => 'Edytuj',
-                    'attr' => array('class' => 'btn btn-primary mt-3')
-                ))
-                ->getForm();
+            $form = $this->createForm(SerieType::class, $serie);
 
             $form->handleRequest($request);
 

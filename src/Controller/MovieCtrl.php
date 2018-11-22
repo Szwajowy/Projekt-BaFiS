@@ -5,10 +5,6 @@
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-    use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-    use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
-
     use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +13,8 @@
 
     use App\Entity\Movie;
     use App\Entity\Rating;
+
+    use App\Form\Type\MovieType;
 
     class MovieCtrl extends Controller {
 
@@ -46,22 +44,7 @@
         public function add(Request $request) {
             $movie = new Movie();
             
-            $form = $this->createFormBuilder($movie)
-                ->add('title', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                    ))
-                ->add('genre', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('description', TextareaType::class, array(
-                    'required' => false,
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('save', SubmitType::class, array(
-                    'label' => 'Utwórz',
-                    'attr' => array('class' => 'btn btn-primary mt-3')
-                ))
-                ->getForm();
+            $form = $this->createForm(MovieType::class, $movie);
 
             $form->handleRequest($request);
 
@@ -91,22 +74,7 @@
         public function edit(Request $request, $id) {
             $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
             
-            $form = $this->createFormBuilder($movie)
-                ->add('title', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                    ))
-                ->add('genre', TextType::class, array(
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('description', TextareaType::class, array(
-                    'required' => false,
-                    'attr' => array('class' => 'form-control')
-                ))
-                ->add('save', SubmitType::class, array(
-                    'label' => 'Edytuj',
-                    'attr' => array('class' => 'btn btn-primary mt-3')
-                ))
-                ->getForm();
+            $form = $this->createForm(MovieType::class, $movie);
 
             $form->handleRequest($request);
 
@@ -117,7 +85,7 @@
                 $entityManager->persist($movie);
                 $entityManager->flush();
 
-                return $this->redirect($request->server->get('HTTP_REFERER'));
+                return $this->redirectToRoute('movie_list');
             }
                 
             return $this->render('/movies/edit.html.twig', array('form' => $form->createView()));
