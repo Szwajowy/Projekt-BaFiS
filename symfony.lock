@@ -71,9 +71,6 @@
     "nikic/php-parser": {
         "version": "v4.1.0"
     },
-    "ninsuo/symfony-collection": {
-        "version": "2.1.30"
-    },
     "ocramius/package-versions": {
         "version": "1.3.0"
     },
