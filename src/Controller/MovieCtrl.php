@@ -11,8 +11,9 @@
 
     use Symfony\Component\Routing\Annotation\Route;
 
-    use App\Entity\Movie;
+    use App\Entity\Production;
     use App\Entity\Rating;
+    use App\Entity\Productiontype;
 
     use App\Form\Type\MovieType;
 
@@ -23,7 +24,7 @@
          * Method({"GET", "POST"})
          */
         public function index(Request $request) {
-            $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array(), array('title' => 'ASC'));
+            $movies = $this->getDoctrine()->getRepository(Production::class)->findBy(array('type' => 0), array('title' => 'ASC'));
 
             return $this->render('movies/index.html.twig', array('movies' => $movies));
         }
@@ -32,7 +33,7 @@
          * @Route("/movies/show/{id}", name="movie_show")
          */
         public function show($id) {
-            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+            $movie = $this->getDoctrine()->getRepository(Production::class)->find($id);
 
             return $this->render('movies/show.html.twig', array('movie' => $movie));
         } 
@@ -42,7 +43,7 @@
          * Method({"GET", "POST"})
          */
         public function add(Request $request) {
-            $movie = new Movie();
+            $movie = new Production();
             
             $form = $this->createForm(MovieType::class, $movie);
 
@@ -51,11 +52,17 @@
             if($form->isSubmitted() && $form->isValid()) {
                 $movie = $form->getData();
 
-                if($this->isGranted('ROLE_ADMIN')) {
-                    $movie->setIsApproved(true);
-                } else {
-                    $movie->setIsApproved(false);
-                }
+                // Set type of production to '0' - movie
+                $productionType = $this->getDoctrine()->getRepository(Productiontype::class)->find(0);
+                $movie->setType($productionType);
+
+                // TODO: Add "isApproved" field in User table
+
+                // if($this->isGranted('ROLE_ADMIN')) {
+                //     $movie->setIsApproved(true);
+                // } else {
+                //     $movie->setIsApproved(false);
+                // }
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($movie);
@@ -67,54 +74,54 @@
             return $this->render('/movies/add.html.twig', array('form' => $form->createView()));
         }
 
-        /**
-         * @Route("/movies/edit/{id}", name="movie_edit")
-         * Method({"GET", "POST"})
-         */
-        public function edit(Request $request, $id) {
-            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+        // /**
+        //  * @Route("/movies/edit/{id}", name="movie_edit")
+        //  * Method({"GET", "POST"})
+        //  */
+        // public function edit(Request $request, $id) {
+        //     $movie = $this->getDoctrine()->getRepository(Production::class)->find($id);
             
-            $form = $this->createForm(MovieType::class, $movie);
+        //     $form = $this->createForm(MovieType::class, $movie);
 
-            $form->handleRequest($request);
+        //     $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()) {
-                $movie = $form->getData();
+        //     if($form->isSubmitted() && $form->isValid()) {
+        //         $movie = $form->getData();
 
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($movie);
-                $entityManager->flush();
+        //         $entityManager = $this->getDoctrine()->getManager();
+        //         $entityManager->persist($movie);
+        //         $entityManager->flush();
 
-                return $this->redirectToRoute('movie_list');
-            }
+        //         return $this->redirectToRoute('movie_list');
+        //     }
                 
-            return $this->render('/movies/edit.html.twig', array('form' => $form->createView()));
-        }
+        //     return $this->render('/movies/edit.html.twig', array('form' => $form->createView()));
+        // }
 
-        /**
-         * @Route("/movies/delete/{id}", name="movie_delete")
-         */
-        public function delete(Request $request, $id) {
-            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+        // /**
+        //  * @Route("/movies/delete/{id}", name="movie_delete")
+        //  */
+        // public function delete(Request $request, $id) {
+        //     $movie = $this->getDoctrine()->getRepository(Production::class)->find($id);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($movie);
-            $entityManager->flush();
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->remove($movie);
+        //     $entityManager->flush();
 
-            return $this->redirect($request->server->get('HTTP_REFERER'));
-        }
+        //     return $this->redirect($request->server->get('HTTP_REFERER'));
+        // }
 
-        /**
-         * @Route("/movies/accept/{id}", name="movie_accept")
-         */
-        public function accept(Request $request, $id) {
-            $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
-            $movie->setIsApproved(true);
+        // /**
+        //  * @Route("/movies/accept/{id}", name="movie_accept")
+        //  */
+        // public function accept(Request $request, $id) {
+        //     $movie = $this->getDoctrine()->getRepository(Production::class)->find($id);
+        //     $movie->setIsApproved(true);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($movie);
-            $entityManager->flush();
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($movie);
+        //     $entityManager->flush();
 
-            return $this->redirect($request->server->get('HTTP_REFERER'));
-        }
+        //     return $this->redirect($request->server->get('HTTP_REFERER'));
+        // }
     }

@@ -63,6 +63,8 @@ class SecurityCtrl extends AbstractController
                 $this->encoder->encodePassword($user, $user->getPlainPassword())
             );
 
+            $user->setRegistered(new \DateTime("now"));
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();

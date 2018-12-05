@@ -15,9 +15,8 @@ class PendingCreationsCtrl extends AbstractController
      */
     public function index()
     {
-        $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(array('isApproved' => false), array('title' => 'ASC'));
-        $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array('isApproved' => false), array('title' => 'ASC'));
+        $productions = $this->getDoctrine()->getRepository(Production::class)->findBy(array('isApproved' => false), array('title' => 'ASC'));
 
-        return $this->render('pending_creations/index.html.twig', array('movies' => $movies, 'series' => $series));
+        return $this->render('pending_creations/index.html.twig', array('productions' => $productions));
     }
 }

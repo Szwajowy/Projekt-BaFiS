@@ -10,17 +10,17 @@
             {% for movie in movies %}
                 <tr>
                     <th scope="row">{{ movie.title }}</th>
-                    <td>{% for genre in movie.getGenresArray %}{{ genre }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{# {% for genre in movie.getGenresArray %}{{ genre }}{% if not loop.last %}, {% endif %}{% endfor %} #}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="/movies/show/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
+                            <a href="/movies/show/{{ movie.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
                             {% if is_granted('ROLE_USER') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                            <a href="/movies/edit/{{ movie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
-                            <a href="/movies/delete/{{ movie.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            <a href="/movies/edit/{{ movie.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/movies/delete/{{ movie.idProduction }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
                             {% endif %}
                         </div>
                     </td>

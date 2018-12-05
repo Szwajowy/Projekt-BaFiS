@@ -11,7 +11,7 @@
 
     use Symfony\Component\Routing\Annotation\Route;
 
-    use App\Entity\Serie;
+    use App\Entity\Production;
     use App\Entity\Rating;
 
     use App\Form\Type\SerieType;
@@ -23,7 +23,7 @@
          * @Method({"GET"})
          */
         public function index(Request $request) {
-            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array(), array('title' => 'ASC'));
+            $series = $this->getDoctrine()->getRepository(Production::class)->findBy(array('type' => 1), array('title' => 'ASC'));
 
             return $this->render('series/index.html.twig', array('series' => $series));
         }
@@ -32,86 +32,86 @@
          * @Route("/series/show/{id}", name="serie_show")
          */
         public function show($id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
 
             return $this->render('series/show.html.twig', array('serie' => $serie));
         }
 
-        /**
-         * @Route("/series/add", name="serie_add")
-         * Method({"GET", "POST"})
-         */
-        public function add(Request $request) {
-            $serie = new Serie();
+        // /**
+        //  * @Route("/series/add", name="serie_add")
+        //  * Method({"GET", "POST"})
+        //  */
+        // public function add(Request $request) {
+        //     $serie = new Production();
             
-            $form = $this->createForm(SerieType::class, $serie);
+        //     $form = $this->createForm(SerieType::class, $serie);
 
-            $form->handleRequest($request);
+        //     $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()) {
-                $serie = $form->getData();
+        //     if($form->isSubmitted() && $form->isValid()) {
+        //         $serie = $form->getData();
 
-                if($this->isGranted('ROLE_ADMIN')) {
-                    $serie->setIsApproved(true);
-                } else {
-                    $serie->setIsApproved(false);
-                }
+        //         if($this->isGranted('ROLE_ADMIN')) {
+        //             $serie->setIsApproved(true);
+        //         } else {
+        //             $serie->setIsApproved(false);
+        //         }
 
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($serie);
-                $entityManager->flush();
+        //         $entityManager = $this->getDoctrine()->getManager();
+        //         $entityManager->persist($serie);
+        //         $entityManager->flush();
 
-                return $this->redirectToRoute('serie_list');
-            }
+        //         return $this->redirectToRoute('serie_list');
+        //     }
                 
-            return $this->render('/series/add.html.twig', array('form' => $form->createView()));
-        }
+        //     return $this->render('/series/add.html.twig', array('form' => $form->createView()));
+        // }
 
-        /**
-         * @Route("/series/edit/{id}", name="serie_edit")
-         * Method({"GET", "POST"})
-         */
-        public function edit(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+        // /**
+        //  * @Route("/series/edit/{id}", name="serie_edit")
+        //  * Method({"GET", "POST"})
+        //  */
+        // public function edit(Request $request, $id) {
+        //     $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
             
-            $form = $this->createForm(SerieType::class, $serie);
+        //     $form = $this->createForm(SerieType::class, $serie);
 
-            $form->handleRequest($request);
+        //     $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->flush();
+        //     if($form->isSubmitted() && $form->isValid()) {
+        //         $entityManager = $this->getDoctrine()->getManager();
+        //         $entityManager->flush();
 
-                return $this->redirect($request->server->get('HTTP_REFERER'));
-            }
+        //         return $this->redirect($request->server->get('HTTP_REFERER'));
+        //     }
                 
-            return $this->render('/series/edit.html.twig', array('form' => $form->createView()));
-        }
+        //     return $this->render('/series/edit.html.twig', array('form' => $form->createView()));
+        // }
 
-        /**
-         * @Route("/series/delete/{id}", name="serie_delete")
-         */
-        public function delete(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+        // /**
+        //  * @Route("/series/delete/{id}", name="serie_delete")
+        //  */
+        // public function delete(Request $request, $id) {
+        //     $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($serie);
-            $entityManager->flush();
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->remove($serie);
+        //     $entityManager->flush();
 
-            return $this->redirect($request->server->get('HTTP_REFERER'));
-        }
+        //     return $this->redirect($request->server->get('HTTP_REFERER'));
+        // }
 
-        /**
-         * @Route("/series/accept/{id}", name="serie_accept")
-         */
-        public function accept(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
-            $serie->setIsApproved(true);
+        // /**
+        //  * @Route("/series/accept/{id}", name="serie_accept")
+        //  */
+        // public function accept(Request $request, $id) {
+        //     $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
+        //     $serie->setIsApproved(true);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($serie);
-            $entityManager->flush();
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($serie);
+        //     $entityManager->flush();
 
-            return $this->redirect($request->server->get('HTTP_REFERER'));
-        }
+        //     return $this->redirect($request->server->get('HTTP_REFERER'));
+        // }
     }

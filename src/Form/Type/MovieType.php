@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-use App\Entity\Movie;
+use App\Entity\Production;
 
 class MovieType extends AbstractType
 {
@@ -20,9 +20,12 @@ class MovieType extends AbstractType
             'attr' => array('class' => 'form-control')
             ));
 
-        $builder->add('genres', TextType::class, array(
-            'attr' => array('class' => 'form-control')
-        ));
+        // TODO: Genres are now stored in second table in many-to-many relation,
+        // so we need to change the method of adding them.
+
+        // $builder->add('genres', TextType::class, array(
+        //     'attr' => array('class' => 'form-control')
+        // ));
 
         $builder->add('description', TextareaType::class, array(
             'required' => false,
@@ -38,7 +41,7 @@ class MovieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Movie::class,
+            'data_class' => Production::class,
         ));
     }
 }
