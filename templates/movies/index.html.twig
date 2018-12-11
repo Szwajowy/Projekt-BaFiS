@@ -8,9 +8,9 @@
         <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
         <li class="breadcrumb-item active"><a href="#">Filmy</a></li>
     </ol>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-between mb-3">
         <h1>Filmy</h1>
-        <div class="btn-group mb-3" role="group">
+        <div class="btn-group" role="group">
             {% if is_granted('ROLE_USER') %}
             <a href="/movies/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
             {% endif %}

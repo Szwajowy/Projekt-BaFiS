@@ -181,4 +181,9 @@ class User implements UserInterface, \Serializable {
             $this->registered
         ) = unserialize($string, ['allowed_classes' => false]);
     }
+
+    public function getIduser(): ?int
+    {
+        return $this->iduser;
+    }
 }

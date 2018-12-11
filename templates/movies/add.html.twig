@@ -12,7 +12,26 @@
     <h1 class="mb-3">Nowy film</h1>
 
     {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+        {{ form_row(form.title) }}
+
+        <div class="well" id="genre_list" data-prototype="{{ form_widget(form.idgenre.vars.prototype)|e('html_attr') }}">
+            {{ form_label(form.idgenre) }}
+            {% for row in form.idgenre %}
+                <div class="genre-row">
+                    {{ form_widget(row) }}
+                </div>
+            {% endfor %}
+        </div>
+
+        {{ form_row(form.description) }}
+        {{ form_row(form.boxoffice) }}
+        {{ form_row(form.save) }}
+        {{ form_row(form._token) }}
+
+    {{ form_end(form, {'render_rest': false}) }}
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/app.js') }}"></script>
 {% endblock %}

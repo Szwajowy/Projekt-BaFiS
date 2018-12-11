@@ -47,14 +47,19 @@ class Production
     /**
      * @var \Productiontype
      *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Productiontype")
+     * @ORM\ManyToOne(targetEntity="Productiontype")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="type", referencedColumnName="idProductionType")
      * })
      */
     private $type;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isApproved", type="boolean", nullable=false)
+     */
+    private $isApproved;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -104,7 +109,7 @@ class Production
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="idproduction")
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="idproduction", cascade={"persist"}, fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="productiongenre",
      *   joinColumns={
      *     @ORM\JoinColumn(name="idProduction", referencedColumnName="idProduction")
@@ -318,6 +323,7 @@ class Production
     {
         if (!$this->idgenre->contains($idgenre)) {
             $this->idgenre[] = $idgenre;
+            $idgenre->addIdproduction($this);
         }
 
         return $this;
@@ -406,6 +412,18 @@ class Production
         if ($this->idpersonforscenarist->contains($idpersonforscenarist)) {
             $this->idpersonforscenarist->removeElement($idpersonforscenarist);
         }
+
+        return $this;
+    }
+
+    public function getIsApproved()
+    {
+        return $this->isApproved;
+    }
+
+    public function setIsApproved($isApproved): self
+    {
+        $this->isApproved = $isApproved;
 
         return $this;
     }

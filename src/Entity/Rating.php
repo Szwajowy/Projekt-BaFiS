@@ -13,15 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Rating
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="Ratingcol", type="integer", nullable=false, options={"unsigned"=true})
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    private $ratingcol;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(name="value", type="string", length=45, nullable=true)
@@ -54,7 +45,7 @@ class Rating
      *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Production")
+     * @ORM\OneToOne(targetEntity="Production", cascade={"remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idProduction", referencedColumnName="idProduction")
      * })

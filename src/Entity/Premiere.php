@@ -33,9 +33,7 @@ class Premiere
     /**
      * @var \Country
      *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Country")
+     * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idCountry", referencedColumnName="idCountry")
      * })
