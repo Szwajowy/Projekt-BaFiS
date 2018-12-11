@@ -8,47 +8,67 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields="email", message="Email jest już w użyciu")
- * @UniqueEntity(fields="username", message="Nazwa użytkownika jest zajęta")
+ * User
+ *
+ * @ORM\Table(name="user")
+ * @ORM\Entity
  */
 class User implements UserInterface, \Serializable {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="idUser", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $iduser;
 
     /**
-     * @ORM\Column(type="string", length=190, unique=true)
+     * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=45, nullable=false, unique=true)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=190, unique=true, nullable=true)
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=45, nullable=false, unique=true)
      */
     private $email;
 
     /**
+     * @var string
+     * 
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
 
     /**
-     * @ORM\Column(type="string", length=190)
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="array")
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="array", length=255, nullable=false)
      */
     private $roles = [];
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="registered", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $registered;
+
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->iduser;
     }
 
     public function getUsername(): ?string
@@ -83,6 +103,8 @@ class User implements UserInterface, \Serializable {
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
+
+        return $this;
     }
 
     public function getPassword(): ?string
@@ -109,11 +131,25 @@ class User implements UserInterface, \Serializable {
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     public function resetRoles()
     {
         $this->roles = [];
+    }
+
+    public function getRegistered(): ?\DateTimeInterface
+    {
+        return $this->registered;
+    }
+
+    public function setRegistered(\DateTimeInterface $registered): self
+    {
+        $this->registered = $registered;
+
+        return $this;
     }
 
     public function getSalt() {
@@ -126,21 +162,28 @@ class User implements UserInterface, \Serializable {
 
     public function serialize() {
         return serialize([
-            $this->id,
+            $this->iduser,
             $this->username,
             $this->password,
             $this->email,
-            $this->roles
+            $this->roles,
+            $this->registered
         ]);
     }
 
     public function unserialize($string) {
         list (
-            $this->id,
+            $this->iduser,
             $this->username,
             $this->password,
             $this->email,
-            $this->roles
+            $this->roles,
+            $this->registered
         ) = unserialize($string, ['allowed_classes' => false]);
+    }
+
+    public function getIduser(): ?int
+    {
+        return $this->iduser;
     }
 }

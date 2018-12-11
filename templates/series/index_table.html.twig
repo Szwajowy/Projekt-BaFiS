@@ -9,18 +9,17 @@
         <tbody>
             {% for serie in series %}
                 <tr>
-                    <th scope="row">{{ serie.title }}</th>
-                    <td>{% for genre in serie.getGenresArray %}{{ genre }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <th scope="row"><a href="/series/show/{{ serie.idProduction }}"/>{{ serie.title }}</a></th>
+                    <td>{% for genre in serie.idgenre %}{{ genre.name }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="/series/show/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
                             {% if is_granted('ROLE_USER') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                            <a href="/series/edit/{{ serie.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
-                            <a href="/series/delete/{{ serie.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            <a href="/series/edit/{{ serie.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/series/delete/{{ serie.idProduction }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
                             {% endif %}
                         </div>
                     </td>

@@ -11,7 +11,9 @@
 
     use Symfony\Component\Routing\Annotation\Route;
 
-    use App\Entity\Serie;
+    use App\Entity\Production;
+    use App\Entity\Productiontype;
+    use App\Entity\Genre;
     use App\Entity\Rating;
 
     use App\Form\Type\SerieType;
@@ -23,7 +25,7 @@
          * @Method({"GET"})
          */
         public function index(Request $request) {
-            $series = $this->getDoctrine()->getRepository(Serie::class)->findBy(array(), array('title' => 'ASC'));
+            $series = $this->getDoctrine()->getRepository(Production::class)->findBy(array('type' => 1, 'isApproved' => 1), array('title' => 'ASC'));
 
             return $this->render('series/index.html.twig', array('series' => $series));
         }
@@ -32,7 +34,7 @@
          * @Route("/series/show/{id}", name="serie_show")
          */
         public function show($id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
 
             return $this->render('series/show.html.twig', array('serie' => $serie));
         }
@@ -42,7 +44,7 @@
          * Method({"GET", "POST"})
          */
         public function add(Request $request) {
-            $serie = new Serie();
+            $serie = new Production();
             
             $form = $this->createForm(SerieType::class, $serie);
 
@@ -51,6 +53,10 @@
             if($form->isSubmitted() && $form->isValid()) {
                 $serie = $form->getData();
 
+                // Set type of production to '1' - serie
+                $productionType = $this->getDoctrine()->getRepository(Productiontype::class)->find(1);
+                $serie->setType($productionType);
+
                 if($this->isGranted('ROLE_ADMIN')) {
                     $serie->setIsApproved(true);
                 } else {
@@ -58,6 +64,15 @@
                 }
 
                 $entityManager = $this->getDoctrine()->getManager();
+
+                foreach($serie->getIdgenre() as $genre) {
+                    $existingGenre = $this->getDoctrine()->getRepository(Genre::class)->findBy(['name' => $genre->getName()]);
+                    if($existingGenre != null) {
+                        $serie->removeidgenre($genre);
+                        $serie->addidgenre($existingGenre[0]);
+                    }
+                }
+
                 $entityManager->persist($serie);
                 $entityManager->flush();
 
@@ -72,7 +87,7 @@
          * Method({"GET", "POST"})
          */
         public function edit(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
             
             $form = $this->createForm(SerieType::class, $serie);
 
@@ -80,6 +95,16 @@
 
             if($form->isSubmitted() && $form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
+
+                foreach($serie->getIdgenre() as $genre) {
+                    $existingGenre = $this->getDoctrine()->getRepository(Genre::class)->findBy(['name' => $genre->getName()]);
+                    if($existingGenre != null) {
+                        $serie->removeidgenre($genre);
+                        $serie->addidgenre($existingGenre[0]);
+                    }
+                }
+
+                $entityManager->persist($serie);
                 $entityManager->flush();
 
                 return $this->redirect($request->server->get('HTTP_REFERER'));
@@ -92,9 +117,16 @@
          * @Route("/series/delete/{id}", name="serie_delete")
          */
         public function delete(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
+
+            $ratings = $this->getDoctrine()->getRepository(Rating::class)->findBy(['idproduction'=> $serie->getIdproduction()]);
 
             $entityManager = $this->getDoctrine()->getManager();
+
+            foreach($ratings as $rating) {
+                $entityManager->remove($rating); 
+            }
+
             $entityManager->remove($serie);
             $entityManager->flush();
 
@@ -105,7 +137,7 @@
          * @Route("/series/accept/{id}", name="serie_accept")
          */
         public function accept(Request $request, $id) {
-            $serie = $this->getDoctrine()->getRepository(Serie::class)->find($id);
+            $serie = $this->getDoctrine()->getRepository(Production::class)->find($id);
             $serie->setIsApproved(true);
 
             $entityManager = $this->getDoctrine()->getManager();

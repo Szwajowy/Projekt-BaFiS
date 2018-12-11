@@ -5,104 +5,141 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RatingRepository")
+ * Rating
+ *
+ * @ORM\Table(name="rating", indexes={@ORM\Index(name="fk_Rating_Production1_idx", columns={"idProduction"}), @ORM\Index(name="fk_Rating_User1_idx", columns={"idUser"})})
+ * @ORM\Entity
  */
 class Rating
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="integer")
+     * @var string|null
+     *
+     * @ORM\Column(name="value", type="string", length=45, nullable=true)
      */
     private $value;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=true)
      */
-    private $movieID;
+    private $created;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="modified", type="datetime", nullable=true)
      */
-    private $serieID;
+    private $modified;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int|null
+     *
+     * @ORM\Column(name="idRating", type="integer", nullable=true)
      */
-    private $createdBy;
+    private $idrating;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var \Production
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Production", cascade={"remove"})
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idProduction", referencedColumnName="idProduction")
+     * })
      */
-    private $createdAt;
+    private $idproduction;
 
-    public function getId(): ?int
+    /**
+     * @var \User
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUser", referencedColumnName="idUser")
+     * })
+     */
+    private $iduser;
+
+    public function getRatingcol(): ?int
     {
-        return $this->id;
+        return $this->ratingcol;
     }
 
-    public function getValue(): ?int
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(int $value): self
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    public function getMovieID(): ?int
+    public function getCreated(): ?\DateTimeInterface
     {
-        return $this->movieID;
+        return $this->created;
     }
 
-    public function setMovieID(int $movieID): self
+    public function setCreated(?\DateTimeInterface $created): self
     {
-        $this->movieID = $movieID;
+        $this->created = $created;
 
         return $this;
     }
 
-    public function getSerieID(): ?int
+    public function getModified(): ?\DateTimeInterface
     {
-        return $this->serieID;
+        return $this->modified;
     }
 
-    public function setSerieID(int $serieID): self
+    public function setModified(?\DateTimeInterface $modified): self
     {
-        $this->serieID = $serieID;
+        $this->modified = $modified;
 
         return $this;
     }
 
-    public function getCreatedBy(): ?int
+    public function getIdrating(): ?int
     {
-        return $this->createdBy;
+        return $this->idrating;
     }
 
-    public function setCreatedBy(int $createdBy): self
+    public function setIdrating(?int $idrating): self
     {
-        $this->createdBy = $createdBy;
+        $this->idrating = $idrating;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getIdproduction(): ?Production
     {
-        return $this->createdAt;
+        return $this->idproduction;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setIdproduction(?Production $idproduction): self
     {
-        $this->createdAt = $createdAt;
+        $this->idproduction = $idproduction;
 
         return $this;
     }
+
+    public function getIduser(): ?User
+    {
+        return $this->iduser;
+    }
+
+    public function setIduser(?User $iduser): self
+    {
+        $this->iduser = $iduser;
+
+        return $this;
+    }
+
+
 }

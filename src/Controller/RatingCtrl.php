@@ -9,9 +9,9 @@
 
     use Symfony\Component\Routing\Annotation\Route;
 
-    use App\Entity\Movie;
-    use App\Entity\Serie;
+    use App\Entity\Production;
     use App\Entity\Rating;
+    use App\Entity\User;
 
     class RatingCtrl extends Controller {
         private $request;
@@ -38,16 +38,11 @@
                 return $response; // Return JSON response about error
             }
 
-            $this->requestData = json_decode($this->request->getContent(), true);
+            $this->requestData = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $this->request->getContent()), true);
         }
 
         public function getRatingFromDB() {
-            // Get rating from DB for movie or serie 
-            if($this->productionType == 'movies') {
-                $this->rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('movieID' => intval($this->requestData['movieID']), 'createdBy' => intval($this->requestData['userID'])), array());
-            } else if ($this->productionType == 'series') {
-                $this->rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('serieID' => intval($this->requestData['serieID']), 'createdBy' => intval($this->requestData['userID'])), array());
-            }
+            $this->rating = $this->getDoctrine()->getRepository(Rating::class)->findBy(array('idproduction' => intval($this->requestData['productionID']), 'iduser' => intval($this->requestData['userID'])), array());
         }
 
         /**
@@ -92,14 +87,13 @@
 
             if($this->rating == null){
                 $this->rating = new Rating();
+                $production = $this->getDoctrine()->getRepository(Production::class)->find(intval($this->requestData['productionID']));
+                $user = $this->getDoctrine()->getRepository(User::class)->find(intval($this->requestData['userID']));
+
                 $this->rating->setValue(intval($this->requestData['ratingValue']));
-                if($this->productionType == 'movies') {
-                    $this->rating->setMovieID(intval($this->requestData['movieID']));
-                } else if ($this->productionType == 'series') {
-                    $this->rating->setSerieID(intval($this->requestData['serieID']));
-                }
-                $this->rating->setCreatedBy(intval($this->requestData['userID']));
-                $this->rating->setCreatedAt(new \DateTime());
+                $this->rating->setIdproduction($production);
+                $this->rating->setIduser($user);
+                $this->rating->setCreated(new \DateTime());
             } else {
                 $this->rating = $this->rating[0];
                 $this->rating->setValue(intval($this->requestData['ratingValue']));
