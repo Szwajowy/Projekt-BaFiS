@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Entity\Movie;
-use App\Entity\Serie;
+use App\Entity\Production;
 
 class SearchCtrl extends Controller
 {
@@ -22,37 +21,16 @@ class SearchCtrl extends Controller
     public function getResultsFromDB() {
         $filter = $this->searchInput;
 
-        // Search for movies
+        // Search for productions
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(Movie::class);   
+        $repository = $em->getRepository(Production::class);   
         $query = $repository->createQueryBuilder('c')
             ->where('c.isApproved = true')
             ->andWhere('c.title LIKE \'%'.$filter.'%\'')
             ->orderBy('c.title', 'ASC')
             ->getQuery();
-        $movies = $query->getResult();
 
-        // Search for series
-        $repository = $em->getRepository(Serie::class);
-        $query = $repository->createQueryBuilder('c')
-        ->where('c.isApproved = true')
-        ->andWhere('c.title LIKE \'%'.$filter.'%\'')
-        ->orderBy('c.title', 'ASC')
-        ->getQuery();
-        $series = $query->getResult();
-
-        // Add type viariable to all movie results
-        foreach ($movies as $movie) {
-            $movie->type = 'movie';
-        }
-
-        // Add type viariable to all serie results
-        foreach ($series as $serie) {
-            $serie->type = 'serie';
-        }
-
-        $this->results = $movies + $series;
-        
+        $this->results = $query->getResult();
     }
 
     /**
