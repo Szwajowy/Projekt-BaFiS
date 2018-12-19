@@ -23,18 +23,17 @@
         <tbody>
             {% for result in results %}
                 <tr>
-                    <th scope="row">{{ result.title }}</th>
-                    <td>{{ result.genre }}</td>
+                    <th scope="row"><a href="/{{ result.type.name }}s/show/{{ result.idProduction }}"/>{{ result.title }}</a></th>
+                    <td>{% for genre in result.idgenre %}{{ genre.name }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="/{{ result.type }}s/show/{{ result.id }}" class="btn btn-primary btn-sm mr-1"/>Szczegóły</a>
                             {% if is_granted('ROLE_USER') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                             <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                            <a href="/{{ result.type }}s/edit/{{ result.id }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
-                            <a href="/{{ result.type }}s/delete/{{ result.id }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                            <a href="/{{ result.type.name }}s/edit/{{ result.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                            <a href="/{{ result.type.name }}s/delete/{{ result.idProduction }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
                             {% endif %}
                         </div>
                     </td>
